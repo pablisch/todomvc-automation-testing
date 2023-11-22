@@ -5,10 +5,44 @@ package todomvc.automation;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 class AppTest {
-    @Test void appHasAGreeting() {
-        App classUnderTest = new App();
-        assertNotNull(classUnderTest.getGreeting(), "app should have a greeting");
+
+    private static FirefoxDriver driver;
+
+    @BeforeAll
+    static void launchBrowser() {
+        WebDriverManager.firefoxdriver().setup();
+        driver = new FirefoxDriver();
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+    }
+    @BeforeEach
+    void loadHomepage() {
+        driver.get("https://todomvc.com/examples/react/#/");
+    }
+    @Test
+    void should() {
+        WebElement newTodoInput = driver.findElement(By.cssSelector("input[class='new-todo']"));
+        System.out.println(newTodoInput.getText());
+        assertEquals("What needs to be done?", newTodoInput.getAttribute("placeholder"));
+    }
+
+    @AfterAll
+    static void closeBrowser() {
+        driver.quit();
     }
 }
