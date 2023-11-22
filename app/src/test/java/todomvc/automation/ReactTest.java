@@ -3,6 +3,7 @@ package todomvc.automation;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -22,12 +23,23 @@ public class ReactTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
     }
 
+
     @Test
-    void createNewTodoWithTextMakeTests() {
+    void shouldCreateNewTodoWithTextMakeTests() {
     ReactPage page = new ReactPage(driver);
     page.navigate();
     page.addNewTodoItem();
     assertEquals("Make tests", page.getFirstTodo());
+    }
+
+    @Test
+    void shouldModifyFirstTodo() {
+    ReactPage page = new ReactPage(driver);
+    page.navigate();
+
+    int todoLength = page.getFirstTodo().length();
+    page.modifyFirstTodo(todoLength);
+    assertEquals("Make test", page.getFirstTodo());
     }
 
     @AfterAll
