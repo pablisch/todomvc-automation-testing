@@ -39,7 +39,7 @@ public class ReactTest {
 
     int todoLength = page.getFirstTodo().length();
     page.modifyFirstTodo(todoLength);
-    assertEquals("Make test", page.getFirstTodo());
+    assertEquals("Break tests", page.getFirstTodo());
     }
 
     @AfterAll

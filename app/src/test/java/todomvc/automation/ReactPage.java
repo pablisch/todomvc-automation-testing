@@ -42,9 +42,9 @@ public class ReactPage {
         actions.doubleClick(firstTodo).perform();
 
         WebElement firstTodoEdit = driver.findElement(firstTodoEditBy);
-        firstTodoEdit.sendKeys(Keys.BACK_SPACE);
+        for (int i = 1; i <= todoLength; i++) { firstTodoEdit.sendKeys(Keys.BACK_SPACE); }
+        firstTodoEdit.sendKeys("Break tests");
         firstTodoEdit.sendKeys(Keys.ENTER);
-
     }
 
 
