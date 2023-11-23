@@ -89,10 +89,11 @@ public class ReactTest {
         page.addNewTodoItem("Make more tests");
         page.addNewTodoItem("Tests tests tests");
         page.tickOffATodoItem(2);
+        assertEquals("2 items left", page.getNumberOfActiveItems());
         // Act
         page.clickToggleAllArrow();
         // Assert
-        assertTrue(page.checkAllCompleted());
+        assertEquals("0 items left", page.getNumberOfActiveItems());
     }
 
     @AfterEach

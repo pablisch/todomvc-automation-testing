@@ -10,6 +10,8 @@ public class ReactPage {
     private final By newTodoInputBy = By.cssSelector("input[class='new-todo']");
     private final By todoEditBy = By.cssSelector("input[class='edit']");
     private final By clearCompletedButtonBy = By.cssSelector("button[class='clear-completed']");
+    private final By clickToggleAllArrowBy = By.cssSelector("label[for='toggle-all']");
+    private final By numberOfActiveItemsBy = By.cssSelector("span[class='todo-count']");
 
     public ReactPage(WebDriver driver) {
         this.driver = driver;
@@ -89,11 +91,13 @@ public class ReactPage {
     }
 
     public void clickToggleAllArrow() {
-
+        WebElement clickToggleAllArrow = driver.findElement(clickToggleAllArrowBy);
+        clickToggleAllArrow.click();
     }
 
-    public boolean checkAllCompleted() {
-
-        return true;
+    public String getNumberOfActiveItems() {
+        WebElement numberOfActiveItems = driver.findElement(numberOfActiveItemsBy);
+        return numberOfActiveItems.getText();
     }
+
 }
