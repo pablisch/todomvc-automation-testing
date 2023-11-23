@@ -95,6 +95,16 @@ public class ReactTest {
         assertEquals("3 items left", page.getNumberOfActiveItems());
     }
 
+    @Test
+    void todosShouldNotBleedOverIntoOtherVariants() {
+        page.addNewTodoItem("Make tests");
+        assertEquals("1 item left", page.getNumberOfActiveItems());
+        VuePage vuePage = new VuePage(driver);
+        vuePage.navigate();
+        assertEquals("display: none;", vuePage.checkDisplayStateOfMainSectionFooter());
+
+    }
+
     @AfterEach
     void clearStorage() {
         JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
