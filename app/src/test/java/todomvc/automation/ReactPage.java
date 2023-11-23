@@ -13,6 +13,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.JavascriptExecutor;
 
 import java.time.Duration;
 
@@ -22,19 +23,31 @@ public class ReactPage {
     private final By firstTodoBy = By.xpath("/html/body/section/div/section/ul/li/div/label");
 
     private final By firstTodoEditBy = By.cssSelector(".edit");
-    public ReactPage(WebDriver driver) {this.driver = driver;}
+
+    private final By FirstTodoCheckboxBy = By.cssSelector(".todo-list li:first-child input.toggle");
+
+    private final By tickOffIndexTodoItemBy = By.cssSelector(".todo-list li:nth-child(1) input.toggle");
+//    private final By completedTodoItemBy = By.cssSelector(".todo-list li:first-child.completed");
+
+    public ReactPage(WebDriver driver) {
+        this.driver = driver;
+    }
+
     public void navigate() {
         driver.get("https://todomvc.com/examples/react/#/");
     }
+
     public void addNewTodoItem() {
         WebElement newTodoInput = driver.findElement(newTodoInputBy);
         newTodoInput.sendKeys("Make tests");
         newTodoInput.sendKeys(Keys.ENTER);
     }
+
     public String getFirstTodo() {
         WebElement firstTodo = driver.findElement(firstTodoBy);
         return firstTodo.getText();
     }
+
     public void modifyFirstTodo(int todoLength) {
         WebElement firstTodo = driver.findElement(firstTodoBy);
 
@@ -42,9 +55,23 @@ public class ReactPage {
         actions.doubleClick(firstTodo).perform();
 
         WebElement firstTodoEdit = driver.findElement(firstTodoEditBy);
-        for (int i = 1; i <= todoLength; i++) { firstTodoEdit.sendKeys(Keys.BACK_SPACE); }
+        for (int i = 1; i <= todoLength; i++) {
+            firstTodoEdit.sendKeys(Keys.BACK_SPACE);
+        }
         firstTodoEdit.sendKeys("Break tests");
         firstTodoEdit.sendKeys(Keys.ENTER);
+    }
+
+    public void tickOffFirstTodoItem() {
+        WebElement todoCheckbox = driver.findElement(FirstTodoCheckboxBy);
+        todoCheckbox.click();
+    }
+
+    public Boolean checkFirstTodoIsCompleted() {
+        WebElement todoCheckbox = driver.findElement(FirstTodoCheckboxBy);
+        String todoCheckboxClass = todoCheckbox.getAttribute("class");
+        System.out.println(todoCheckboxClass.equals("completed"));
+        return todoCheckboxClass.equals("completed");
     }
 
 
