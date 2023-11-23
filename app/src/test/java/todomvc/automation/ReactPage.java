@@ -1,20 +1,18 @@
 package todomvc.automation;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.JavascriptExecutor;
 
+import java.io.File;
 import java.time.Duration;
 
 public class ReactPage {
@@ -25,6 +23,7 @@ public class ReactPage {
     private final By firstTodoEditBy = By.cssSelector(".edit");
 
     private final By FirstTodoCheckboxBy = By.cssSelector(".todo-list li:first-child input.toggle");
+    private final By FirstTodoListItemBy = By.cssSelector(".todo-list li:first-child");
 
     private final By tickOffIndexTodoItemBy = By.cssSelector(".todo-list li:nth-child(1) input.toggle");
 //    private final By completedTodoItemBy = By.cssSelector(".todo-list li:first-child.completed");
@@ -33,13 +32,20 @@ public class ReactPage {
         this.driver = driver;
     }
 
+    public static void takeScreenshot(WebDriver webdriver, String desiredPath) throws Exception {
+        TakesScreenshot screenshot = ((TakesScreenshot)webdriver);
+        File screenshotFile = screenshot.getScreenshotAs(OutputType.FILE);
+        File targetFile = new File(desiredPath);
+        FileUtils.copyFile(screenshotFile, targetFile);
+    }
+
     public void navigate() {
         driver.get("https://todomvc.com/examples/react/#/");
     }
 
-    public void addNewTodoItem() {
+    public void addNewTodoItem(String todoValue) {
         WebElement newTodoInput = driver.findElement(newTodoInputBy);
-        newTodoInput.sendKeys("Make tests");
+        newTodoInput.sendKeys(todoValue);
         newTodoInput.sendKeys(Keys.ENTER);
     }
 
@@ -68,11 +74,10 @@ public class ReactPage {
     }
 
     public Boolean checkFirstTodoIsCompleted() {
-        WebElement todoCheckbox = driver.findElement(FirstTodoCheckboxBy);
+        WebElement todoCheckbox = driver.findElement(FirstTodoListItemBy);
         String todoCheckboxClass = todoCheckbox.getAttribute("class");
-        System.out.println(todoCheckboxClass.equals("completed"));
+        System.out.println(todoCheckboxClass);
         return todoCheckboxClass.equals("completed");
     }
-
 
 }
