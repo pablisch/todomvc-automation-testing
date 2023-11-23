@@ -29,7 +29,7 @@ public class ReactTest {
     ReactPage page = new ReactPage(driver);
     page.navigate();
     page.addNewTodoItem("Make tests");
-    assertEquals("Make tests", page.getFirstTodo());
+    assertEquals("Make tests", page.getFirstTodo(1));
     }
 
     @Test
@@ -37,32 +37,33 @@ public class ReactTest {
     ReactPage page = new ReactPage(driver);
     page.navigate();
         page.addNewTodoItem("Make tests");
-    int todoLength = page.getFirstTodo().length();
-    page.modifyFirstTodo(todoLength);
-    assertEquals("Break tests", page.getFirstTodo());
+    int todoLength = page.getFirstTodo(1).length();
+    page.modifyATodo(todoLength);
+    assertEquals("Break tests", page.getFirstTodo(1));
     }
 
     @Test
     void shouldTickOffFirstTodoItem() {
+        int todoIndex = 1;
         ReactPage page = new ReactPage(driver);
         page.navigate();
         page.addNewTodoItem("Make tests");
-        page.tickOffFirstTodoItem();
-        page.checkFirstTodoIsCompleted();
+        page.tickOffATodoItem(todoIndex);
 
-        assertTrue(page.checkFirstTodoIsCompleted());
+        assertTrue(page.checkTodoIsCompleted(todoIndex));
     }
 
-//    @Test
-//    void shouldTickOffFirstTodoItem() {
-//        ReactPage page = new ReactPage(driver);
-//        page.navigate();
-//        page.addNewTodoItem("Make tests");
-//        page.tickOffFirstTodoItem();
-//        page.checkFirstTodoIsCompleted();
-//
-//        assertTrue(page.checkFirstTodoIsCompleted());
-//    }
+    @Test
+    void shouldTickOffSecondTodoItem() {
+        ReactPage page = new ReactPage(driver);
+        int todoIndex = 2;
+        page.navigate();
+        page.addNewTodoItem("Make tests");
+        page.addNewTodoItem("Make more tests");
+        page.tickOffATodoItem(todoIndex);
+
+        assertTrue(page.checkTodoIsCompleted(todoIndex));
+    }
 
 
     @AfterEach

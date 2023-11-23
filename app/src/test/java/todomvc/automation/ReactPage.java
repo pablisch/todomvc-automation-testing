@@ -20,12 +20,13 @@ public class ReactPage {
     protected WebDriver driver;
 
     int index = 1;
-    String todoCheckboxSelector = String.format(".todo-list li:nth-child(%d) input.toggle", index );
-    private By todoCheckboxSelectorBy = By.cssSelector(todoCheckboxSelector);
+//    String todoCheckboxSelector = String.format(".todo-list li:nth-child(%d) input.toggle", index );
+//    private By todoCheckboxSelectorBy = By.cssSelector(todoCheckboxSelector);
 //    private final By todoCheckboxSelectorBy = By.cssSelector(".todo-list li:nth-child(1) input.toggle");
 
-    String todoListItemSelector = String.format(".todo-list li:nth-child(%d)", index );
-    private By todoListItemSelectorBy = By.cssSelector(todoListItemSelector);
+    String todoLabelSelector = String.format(".todo-list li:nth-child(%d) label", index );
+    private By todoLabelSelectorBy = By.cssSelector(todoLabelSelector);
+
 
 
     private final By newTodoInputBy = By.cssSelector("input[class='new-todo']");
@@ -51,18 +52,29 @@ public class ReactPage {
         driver.get("https://todomvc.com/examples/react/#/");
     }
 
+    By getTodoLabelSelector(int index) {
+        String todoLabelSelector = String.format(".todo-list li:nth-child(%d) label", index );
+        By todoLabelSelectorBy;
+        todoLabelSelectorBy = By.cssSelector(todoLabelSelector);
+        return todoLabelSelectorBy;
+    }
+
     public void addNewTodoItem(String todoValue) {
         WebElement newTodoInput = driver.findElement(newTodoInputBy);
         newTodoInput.sendKeys(todoValue);
         newTodoInput.sendKeys(Keys.ENTER);
     }
 
-    public String getFirstTodo() {
-        WebElement firstTodo = driver.findElement(firstTodoBy);
+    public String getFirstTodo(int index) {
+//        WebElement firstTodo = driver.findElement(firstTodoBy);
+        WebElement firstTodo = driver.findElement(getTodoLabelSelector(index));
+//        System.out.println(firstTodo.getText());
+        System.out.println(firstTodo.getText());
+
         return firstTodo.getText();
     }
 
-    public void modifyFirstTodo(int todoLength) {
+    public void modifyATodo(int todoLength) {
         WebElement firstTodo = driver.findElement(firstTodoBy);
 
         Actions actions = new Actions(driver);
@@ -76,16 +88,26 @@ public class ReactPage {
         firstTodoEdit.sendKeys(Keys.ENTER);
     }
 
-    public void tickOffFirstTodoItem() {
-        WebElement todoCheckbox = driver.findElement(todoCheckboxSelectorBy);
+        By getTodoCheckboxSelector(int index) {
+        String todoCheckboxSelector = String.format(".todo-list li:nth-child(%d) input.toggle", index );
+        By todoCheckboxSelectorBy = By.cssSelector(todoCheckboxSelector);
+        return todoCheckboxSelectorBy;
+    }
+
+    public void tickOffATodoItem(int index) {
+        By thisCheckboxSelectorBy = getTodoCheckboxSelector(index);
+        WebElement todoCheckbox = driver.findElement(thisCheckboxSelectorBy);
         todoCheckbox.click();
     }
 
-    public Boolean checkFirstTodoIsCompleted() {
-        WebElement todoCheckbox = driver.findElement(todoListItemSelectorBy);
-        String todoCheckboxClass = todoCheckbox.getAttribute("class");
-        System.out.println(todoCheckboxClass);
-        return todoCheckboxClass.equals("completed");
+    public Boolean checkTodoIsCompleted(int index) {
+        String todoListItemSelector = String.format(".todo-list li:nth-child(%d)", index );
+        By todoListItemSelectorBy = By.cssSelector(todoListItemSelector);
+//        By thisCheckboxSelectorBy = getTodoCheckboxSelector(index);
+        WebElement todoListItem = driver.findElement(todoListItemSelectorBy);
+        String todoListItemClass = todoListItem.getAttribute("class");
+        System.out.println(todoListItemClass);
+        return todoListItemClass.equals("completed");
     }
 
 }
