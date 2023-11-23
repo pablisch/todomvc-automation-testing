@@ -83,17 +83,16 @@ public class ReactTest {
     }
 
     @Test
-    void shouldMarkAllItemsCompletedWhenToggleAllArrowIsClickedOnce() {
-        // Arrange
+    void shouldToggleAllItemsCompletedIncompleteWhenToggleAllArrowIsClicked() {
         page.addNewTodoItem("Make tests");
         page.addNewTodoItem("Make more tests");
         page.addNewTodoItem("Tests tests tests");
         page.tickOffATodoItem(2);
         assertEquals("2 items left", page.getNumberOfActiveItems());
-        // Act
         page.clickToggleAllArrow();
-        // Assert
         assertEquals("0 items left", page.getNumberOfActiveItems());
+        page.clickToggleAllArrow();
+        assertEquals("3 items left", page.getNumberOfActiveItems());
     }
 
     @AfterEach
