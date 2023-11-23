@@ -3,6 +3,8 @@ package todomvc.automation;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -27,40 +29,38 @@ public class ReactTest {
     @Test
     void shouldCreateNewTodoWithTextMakeTests() {
     ReactPage page = new ReactPage(driver);
+    int todoIndex = 1;
     page.navigate();
     page.addNewTodoItem("Make tests");
-    assertEquals("Make tests", page.getFirstTodo(1));
+    assertEquals("Make tests", page.getTodo(todoIndex));
     }
 
     @Test
     void shouldModifyFirstTodo() {
     ReactPage page = new ReactPage(driver);
+    int todoIndex = 1;
     page.navigate();
         page.addNewTodoItem("Make tests");
-    int todoLength = page.getFirstTodo(1).length();
-    page.modifyATodo(todoLength);
-    assertEquals("Break tests", page.getFirstTodo(1));
+    int todoLength = page.getTodo(todoIndex).length();
+    page.modifyATodo(todoLength, todoIndex);
+    assertEquals("Break tests", page.getTodo(todoIndex));
     }
 
-    @Test
-    void shouldTickOffFirstTodoItem() {
-        int todoIndex = 1;
+    @DisplayName("Ticking off todos")
+    @ParameterizedTest(name = "Ticks off todo number {0}")
+    @CsvSource({
+            "1",
+            "2",
+            "3"
+    })
+    void shouldTickOffTodoItems(int todoIndex) {
         ReactPage page = new ReactPage(driver);
-        page.navigate();
-        page.addNewTodoItem("Make tests");
-        page.tickOffATodoItem(todoIndex);
-
-        assertTrue(page.checkTodoIsCompleted(todoIndex));
-    }
-
-    @Test
-    void shouldTickOffSecondTodoItem() {
-        ReactPage page = new ReactPage(driver);
-        int todoIndex = 2;
         page.navigate();
         page.addNewTodoItem("Make tests");
         page.addNewTodoItem("Make more tests");
+        page.addNewTodoItem("Tests tests tests");
         page.tickOffATodoItem(todoIndex);
+        System.out.println("Ticking off test with index " + todoIndex);
 
         assertTrue(page.checkTodoIsCompleted(todoIndex));
     }
