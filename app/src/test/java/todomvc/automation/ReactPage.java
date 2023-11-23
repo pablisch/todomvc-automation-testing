@@ -84,7 +84,7 @@ public class ReactPage {
         return todoListItemClass.equals("completed");
     }
 
-    public void clearCompleted() {
+    public void clickClearCompleted() {
         WebElement clearCompletedButton = driver.findElement(clearCompletedButtonBy);
         clearCompletedButton.click();
     }
@@ -99,9 +99,9 @@ public class ReactPage {
         return numberOfActiveItems.getText();
     }
 
-    public String checkDisplayStateOfMainSectionFooter() {
-        WebElement mainSectionFooter = driver.findElement(mainSectionFooterBy);
-        return mainSectionFooter.getAttribute("style");
-    }
+//    public String checkDisplayStateOfMainSectionFooter() {
+//        WebElement mainSectionFooter = driver.findElement(mainSectionFooterBy);
+//        return mainSectionFooter.getAttribute("style");
+//    }
 
 }

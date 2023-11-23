@@ -27,8 +27,7 @@ public class ReactTest {
         page.navigate();
     }
 
-
-    @DisplayName("Create new todo")
+    @DisplayName("Create new todo for plain text, single char, accented chars and emojis")
     @ParameterizedTest(name = "Creates new todo with text {0}")
     @CsvSource({
             "Make tests",
@@ -36,7 +35,7 @@ public class ReactTest {
             "Héłlö",
             "⭐"
             })
-    void shouldCreateNewTodoWithInputtedText(String text) {
+    void testNewTodos(String text) {
         // Arrange
         int todoIndex = 1;
         // Act
@@ -74,7 +73,7 @@ public class ReactTest {
             "2",
             "3"
     })
-    void shouldTickOffTodoItems(int todoIndex) {
+    void testTickingOffTodos(int todoIndex) {
         // Arrange
         page.addNewTodoItem("Make tests");
         page.addNewTodoItem("Make more tests");
@@ -94,7 +93,7 @@ public class ReactTest {
         page.tickOffATodoItem(1);
         page.tickOffATodoItem(3);
         // Act
-        page.clearCompleted();
+        page.clickClearCompleted();
         // Assert
         assertEquals("Make more tests", page.getTodoText(1));
     }
@@ -130,7 +129,7 @@ public class ReactTest {
             "2 items left, 1",
             "3 items left, 0",
     })
-    void testSearchTerms(String status, int numberOfSelected) {
+    void testStatusBarDisplay(String status, int numberOfSelected) {
         // Arrange (create three todos)
         for (int i = 1; i <= 3; i ++) {
             page.addNewTodoItem("I am todo number " + i);
