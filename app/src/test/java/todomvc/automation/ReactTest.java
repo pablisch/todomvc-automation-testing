@@ -123,7 +123,7 @@ public class ReactTest {
     }
 
     @DisplayName("Status bar display")
-    @ParameterizedTest(name = "Status bar display {0}")
+    @ParameterizedTest(name = "Status bar displays {0} when {1} of 3 items are completed")
     @CsvSource({
             "0 items left, 3",
             "1 item left, 2",
@@ -131,12 +131,15 @@ public class ReactTest {
             "3 items left, 0",
     })
     void testSearchTerms(String status, int numberOfSelected) {
+        // Arrange (create three todos)
         for (int i = 1; i <= 3; i ++) {
             page.addNewTodoItem("I am todo number " + i);
         }
+        // Act (tick off <numberOfSelected> items as completed)
         for (int i = 1; i <= numberOfSelected; i ++) {
             page.tickOffATodoItem(i);
         }
+        //Assert (status bar display)
         assertEquals(status, page.getNumberOfActiveItems());
     }
 
