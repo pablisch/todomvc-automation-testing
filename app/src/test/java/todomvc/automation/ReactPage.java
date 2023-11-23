@@ -12,6 +12,7 @@ public class ReactPage {
     private final By clearCompletedButtonBy = By.cssSelector("button[class='clear-completed']");
     private final By clickToggleAllArrowBy = By.cssSelector("label[for='toggle-all']");
     private final By numberOfActiveItemsBy = By.cssSelector("span[class='todo-count']");
+    private final By mainSectionFooterBy = By.cssSelector("footer[class='footer']");
 
     public ReactPage(WebDriver driver) {
         this.driver = driver;
@@ -98,6 +99,11 @@ public class ReactPage {
     public String getNumberOfActiveItems() {
         WebElement numberOfActiveItems = driver.findElement(numberOfActiveItemsBy);
         return numberOfActiveItems.getText();
+    }
+
+    public String checkDisplayStateOfMainSectionFooter() {
+        WebElement mainSectionFooter = driver.findElement(mainSectionFooterBy);
+        return mainSectionFooter.getAttribute("style");
     }
 
 }

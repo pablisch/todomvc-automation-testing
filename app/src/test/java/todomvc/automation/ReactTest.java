@@ -28,14 +28,31 @@ public class ReactTest {
     }
 
 
-    @Test
-    void shouldCreateNewTodoWithTextMakeTests() {
+    @DisplayName("Create new todo")
+    @ParameterizedTest(name = "Creates new todo with text {0}")
+    @CsvSource({
+            "Make tests",
+            "X",
+            "Héłlö",
+            "⭐"
+            })
+    void shouldCreateNewTodoWithInputtedText(String text) {
         // Arrange
         int todoIndex = 1;
         // Act
-        page.addNewTodoItem("Make tests");
+        page.addNewTodoItem(text);
         // Assert
-        assertEquals("Make tests", page.getTodoText(todoIndex));
+        assertEquals(text, page.getTodoText(todoIndex));
+    }
+
+    @Test
+    void shouldNotCreateNewTodoWhenInputIsEmpty() {
+        page.addNewTodoItem("I am a todo");
+        assertEquals("1 item left", page.getNumberOfActiveItems());
+        page.addNewTodoItem("");
+        page.addNewTodoItem(" ");
+        page.addNewTodoItem("        ");
+        assertEquals("1 item left", page.getNumberOfActiveItems());
     }
 
     @Test
@@ -103,6 +120,24 @@ public class ReactTest {
         vuePage.navigate();
         assertEquals("display: none;", vuePage.checkDisplayStateOfMainSectionFooter());
 
+    }
+
+    @DisplayName("Status bar display")
+    @ParameterizedTest(name = "Status bar display {0}")
+    @CsvSource({
+            "0 items left, 3",
+            "1 item left, 2",
+            "2 items left, 1",
+            "3 items left, 0",
+    })
+    void testSearchTerms(String status, int numberOfSelected) {
+        for (int i = 1; i <= 3; i ++) {
+            page.addNewTodoItem("I am todo number " + i);
+        }
+        for (int i = 1; i <= numberOfSelected; i ++) {
+            page.tickOffATodoItem(i);
+        }
+        assertEquals(status, page.getNumberOfActiveItems());
     }
 
     @AfterEach
