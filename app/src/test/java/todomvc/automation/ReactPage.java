@@ -52,7 +52,6 @@ public class ReactPage {
 
     public String getTodoText(int index) {
         WebElement todo = driver.findElement(getTodoLabelSelector(index));
-        System.out.println(todo.getText());
         return todo.getText();
     }
 
@@ -82,7 +81,6 @@ public class ReactPage {
 //        By thisCheckboxSelectorBy = getTodoCheckboxSelector(index);
         WebElement todoListItem = driver.findElement(todoListItemSelectorBy);
         String todoListItemClass = todoListItem.getAttribute("class");
-        System.out.println(todoListItemClass);
         return todoListItemClass.equals("completed");
     }
 
