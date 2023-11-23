@@ -65,11 +65,24 @@ public class ReactTest {
         assertTrue(page.checkTodoIsCompleted(todoIndex));
     }
 
+    @Test
+    void shouldClearAllItemsWhenClearCompletedIsClicked() {
+        ReactPage page = new ReactPage(driver);
+        page.navigate();
+        page.addNewTodoItem("Make tests");
+        page.addNewTodoItem("Make more tests");
+        page.addNewTodoItem("Tests tests tests");
+
+        page.tickOffATodoItem(1);
+        page.tickOffATodoItem(3);
+
+        page.clearCompleted();
+        assertEquals("Make more tests", page.getTodo(1));
+    }
+
 
     @AfterEach
     void closeBrowser() {
         driver.quit();
     }
-
-
 }

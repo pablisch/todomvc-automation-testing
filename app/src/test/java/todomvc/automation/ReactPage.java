@@ -19,7 +19,8 @@ public class ReactPage {
 
     private final By newTodoInputBy = By.cssSelector("input[class='new-todo']");
 
-    private final By todoEditBy = By.cssSelector(".edit");
+    private final By todoEditBy = By.cssSelector("input[class='edit']");
+    private final By clearCompletedButtonBy = By.cssSelector("button[class='clear-completed']");
 
     public ReactPage(WebDriver driver) {
         this.driver = driver;
@@ -91,5 +92,10 @@ public class ReactPage {
         String todoListItemClass = todoListItem.getAttribute("class");
         System.out.println(todoListItemClass);
         return todoListItemClass.equals("completed");
+    }
+
+    public void clearCompleted() {
+        WebElement clearCompletedButton = driver.findElement(clearCompletedButtonBy);
+        clearCompletedButton.click();
     }
 }
