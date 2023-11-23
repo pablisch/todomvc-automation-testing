@@ -16,17 +16,25 @@ import java.io.File;
 import java.time.Duration;
 
 public class ReactPage {
+
     protected WebDriver driver;
+
+    int index = 1;
+    String todoCheckboxSelector = String.format(".todo-list li:nth-child(%d) input.toggle", index );
+    private By todoCheckboxSelectorBy = By.cssSelector(todoCheckboxSelector);
+//    private final By todoCheckboxSelectorBy = By.cssSelector(".todo-list li:nth-child(1) input.toggle");
+
+    String todoListItemSelector = String.format(".todo-list li:nth-child(%d)", index );
+    private By todoListItemSelectorBy = By.cssSelector(todoListItemSelector);
+
+
     private final By newTodoInputBy = By.cssSelector("input[class='new-todo']");
     private final By firstTodoBy = By.xpath("/html/body/section/div/section/ul/li/div/label");
 
     private final By firstTodoEditBy = By.cssSelector(".edit");
 
-    private final By FirstTodoCheckboxBy = By.cssSelector(".todo-list li:first-child input.toggle");
-    private final By FirstTodoListItemBy = By.cssSelector(".todo-list li:first-child");
+//    private final By IndexedTodoListItemBy = By.cssSelector(".todo-list li:nth-child(1)");
 
-    private final By tickOffIndexTodoItemBy = By.cssSelector(".todo-list li:nth-child(1) input.toggle");
-//    private final By completedTodoItemBy = By.cssSelector(".todo-list li:first-child.completed");
 
     public ReactPage(WebDriver driver) {
         this.driver = driver;
@@ -69,12 +77,12 @@ public class ReactPage {
     }
 
     public void tickOffFirstTodoItem() {
-        WebElement todoCheckbox = driver.findElement(FirstTodoCheckboxBy);
+        WebElement todoCheckbox = driver.findElement(todoCheckboxSelectorBy);
         todoCheckbox.click();
     }
 
     public Boolean checkFirstTodoIsCompleted() {
-        WebElement todoCheckbox = driver.findElement(FirstTodoListItemBy);
+        WebElement todoCheckbox = driver.findElement(todoListItemSelectorBy);
         String todoCheckboxClass = todoCheckbox.getAttribute("class");
         System.out.println(todoCheckboxClass);
         return todoCheckboxClass.equals("completed");

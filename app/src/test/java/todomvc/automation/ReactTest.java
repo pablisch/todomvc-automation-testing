@@ -53,6 +53,17 @@ public class ReactTest {
         assertTrue(page.checkFirstTodoIsCompleted());
     }
 
+//    @Test
+//    void shouldTickOffFirstTodoItem() {
+//        ReactPage page = new ReactPage(driver);
+//        page.navigate();
+//        page.addNewTodoItem("Make tests");
+//        page.tickOffFirstTodoItem();
+//        page.checkFirstTodoIsCompleted();
+//
+//        assertTrue(page.checkFirstTodoIsCompleted());
+//    }
+
 
     @AfterEach
     void closeBrowser() {
