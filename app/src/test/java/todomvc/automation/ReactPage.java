@@ -1,24 +1,13 @@
 package todomvc.automation;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
-import org.junit.jupiter.api.Test;
 import org.openqa.selenium.*;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
 import java.io.File;
 
-
 public class ReactPage {
-
     protected WebDriver driver;
-
     private final By newTodoInputBy = By.cssSelector("input[class='new-todo']");
-
     private final By todoEditBy = By.cssSelector("input[class='edit']");
     private final By clearCompletedButtonBy = By.cssSelector("button[class='clear-completed']");
 
@@ -26,8 +15,23 @@ public class ReactPage {
         this.driver = driver;
     }
 
-    public static void takeScreenshot(WebDriver webdriver, String desiredPath) throws Exception {
-        TakesScreenshot screenshot = ((TakesScreenshot)webdriver);
+    // Format By for indexed todo item (label text)
+    By getTodoLabelSelector(int index) {
+        String todoLabelSelector = String.format(".todo-list li:nth-child(%d) label", index );
+        By todoLabelSelectorBy;
+        todoLabelSelectorBy = By.cssSelector(todoLabelSelector);
+        return todoLabelSelectorBy;
+    }
+
+    // Format By for indexed todo checkbox selector
+    By getTodoCheckboxSelector(int index) {
+        String todoCheckboxSelector = String.format(".todo-list li:nth-child(%d) input.toggle", index );
+        By todoCheckboxSelectorBy = By.cssSelector(todoCheckboxSelector);
+        return todoCheckboxSelectorBy;
+    }
+
+    public void takeScreenshot(String desiredPath) throws Exception {
+        TakesScreenshot screenshot = ((TakesScreenshot)this.driver);
         File screenshotFile = screenshot.getScreenshotAs(OutputType.FILE);
         File targetFile = new File(desiredPath);
         FileUtils.copyFile(screenshotFile, targetFile);
@@ -37,21 +41,13 @@ public class ReactPage {
         driver.get("https://todomvc.com/examples/react/#/");
     }
 
-    // Format By for indexed todo item
-    By getTodoLabelSelector(int index) {
-        String todoLabelSelector = String.format(".todo-list li:nth-child(%d) label", index );
-        By todoLabelSelectorBy;
-        todoLabelSelectorBy = By.cssSelector(todoLabelSelector);
-        return todoLabelSelectorBy;
-    }
-
     public void addNewTodoItem(String todoValue) {
         WebElement newTodoInput = driver.findElement(newTodoInputBy);
         newTodoInput.sendKeys(todoValue);
         newTodoInput.sendKeys(Keys.ENTER);
     }
 
-    public String getTodo(int index) {
+    public String getTodoText(int index) {
         WebElement todo = driver.findElement(getTodoLabelSelector(index));
         System.out.println(todo.getText());
         return todo.getText();
@@ -69,13 +65,6 @@ public class ReactPage {
         }
         todoEdit.sendKeys("Break tests");
         todoEdit.sendKeys(Keys.ENTER);
-    }
-
-        // Format By for indexed checkbox selector
-        By getTodoCheckboxSelector(int index) {
-        String todoCheckboxSelector = String.format(".todo-list li:nth-child(%d) input.toggle", index );
-        By todoCheckboxSelectorBy = By.cssSelector(todoCheckboxSelector);
-        return todoCheckboxSelectorBy;
     }
 
     public void tickOffATodoItem(int index) {
@@ -97,5 +86,14 @@ public class ReactPage {
     public void clearCompleted() {
         WebElement clearCompletedButton = driver.findElement(clearCompletedButtonBy);
         clearCompletedButton.click();
+    }
+
+    public void clickToggleAllArrow() {
+
+    }
+
+    public boolean checkAllCompleted() {
+
+        return true;
     }
 }

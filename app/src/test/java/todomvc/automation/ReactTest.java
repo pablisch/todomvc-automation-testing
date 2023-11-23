@@ -1,49 +1,53 @@
 package todomvc.automation;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
-import java.io.File;
 import java.time.Duration;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ReactTest {
     private static ChromeDriver driver;
+    private static ReactPage page;
+
+    @BeforeAll
+    static void launchBrowser() {
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        page = new ReactPage(driver);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
+    }
 
     @BeforeEach
-    void launchBrowser() {
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
+    void loadListPage() {
+        page.navigate();
     }
 
 
     @Test
     void shouldCreateNewTodoWithTextMakeTests() {
-    ReactPage page = new ReactPage(driver);
-    int todoIndex = 1;
-    page.navigate();
-    page.addNewTodoItem("Make tests");
-    assertEquals("Make tests", page.getTodo(todoIndex));
+        // Arrange
+        int todoIndex = 1;
+        // Act
+        page.addNewTodoItem("Make tests");
+        // Assert
+        assertEquals("Make tests", page.getTodoText(todoIndex));
     }
 
     @Test
     void shouldModifyFirstTodo() {
-    ReactPage page = new ReactPage(driver);
-    int todoIndex = 1;
-    page.navigate();
+        // Arrange
+        int todoIndex = 1;
         page.addNewTodoItem("Make tests");
-    int todoLength = page.getTodo(todoIndex).length();
-    page.modifyATodo(todoLength, todoIndex);
-    assertEquals("Break tests", page.getTodo(todoIndex));
+        // Act
+        int todoLength = page.getTodoText(todoIndex).length();
+        page.modifyATodo(todoLength, todoIndex);
+        // Assert
+        assertEquals("Break tests", page.getTodoText(todoIndex));
     }
 
     @DisplayName("Ticking off todos")
@@ -54,35 +58,52 @@ public class ReactTest {
             "3"
     })
     void shouldTickOffTodoItems(int todoIndex) {
-        ReactPage page = new ReactPage(driver);
-        page.navigate();
+        // Arrange
         page.addNewTodoItem("Make tests");
         page.addNewTodoItem("Make more tests");
         page.addNewTodoItem("Tests tests tests");
+        // Act
         page.tickOffATodoItem(todoIndex);
-        System.out.println("Ticking off test with index " + todoIndex);
-
+        // Assert
         assertTrue(page.checkTodoIsCompleted(todoIndex));
     }
 
     @Test
     void shouldClearAllItemsWhenClearCompletedIsClicked() {
-        ReactPage page = new ReactPage(driver);
-        page.navigate();
+        // Arrange
         page.addNewTodoItem("Make tests");
         page.addNewTodoItem("Make more tests");
         page.addNewTodoItem("Tests tests tests");
-
         page.tickOffATodoItem(1);
         page.tickOffATodoItem(3);
-
+        // Act
         page.clearCompleted();
-        assertEquals("Make more tests", page.getTodo(1));
+        // Assert
+        assertEquals("Make more tests", page.getTodoText(1));
     }
 
+    @Test
+    void shouldMarkAllItemsCompletedWhenToggleAllArrowIsClickedOnce() {
+        // Arrange
+        page.addNewTodoItem("Make tests");
+        page.addNewTodoItem("Make more tests");
+        page.addNewTodoItem("Tests tests tests");
+        page.tickOffATodoItem(2);
+        // Act
+        page.clickToggleAllArrow();
+        // Assert
+        assertTrue(page.checkAllCompleted());
+    }
 
     @AfterEach
-    void closeBrowser() {
+    void clearStorage() {
+        JavascriptExecutor jsExecutor = (JavascriptExecutor) driver;
+        jsExecutor.executeScript("localStorage.removeItem('react-todos');");
+        driver.navigate().refresh();
+    }
+
+    @AfterAll
+    static void closeBrowser() {
         driver.quit();
     }
-}
+    }
