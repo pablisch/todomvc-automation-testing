@@ -18,8 +18,8 @@ As a result of implementing the interface towards the end:
 * All subsequest tests appear only in the PageWithInterface page and tests.
 
 Due to time at the end, there are a few loose ends:
-* One legacy test left in the Test file that does not use the POM.
-* None of the post interface
+* One legacy test left in the Test file that does not use the POM, but it has a duplicate test that does use POM.
+* None of the post interface tests have been extended to the interface which would be our next step.
 
 
 
