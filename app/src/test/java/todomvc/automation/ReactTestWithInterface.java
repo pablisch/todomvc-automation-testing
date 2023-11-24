@@ -151,6 +151,7 @@ public class ReactTestWithInterface {
     }
 
     @Test
+    // Uses JSExecutor in Page
     void shouldCheckLocalStorageForKey() {
         // Arrange - assert that new page does not have react-todos key and then add item
         boolean doesNotHaveKey = page.doesLocalStorageContainKey("react-todos");
@@ -163,7 +164,8 @@ public class ReactTestWithInterface {
     }
 
     @Test
-    void ShouldCheckThatEachTodoHasARecordInLocaleStorage() {
+    // This test is completely in this file and does not use the companion page file
+    void ShouldCheckThatEachTodoHasARecordInLocaleStorageWithoutUsingPage() {
         for (int i = 1; i <= 5; i ++) {
             page.addNewTodoItem("I am todo number " + i);
         }
@@ -179,7 +181,8 @@ public class ReactTestWithInterface {
 
     }
     @Test
-    void ShouldCheckThatEachTodoHasARecordInLocaleStorage2() {
+    // This test is equivalent to the above test but DOES use the companion page file
+    void ShouldCheckThatEachTodoHasARecordInLocaleStorageUsingPage() {
         for (int i = 1; i <= 5; i ++) {
             page.addNewTodoItem("I am todo number " + i);
         }
