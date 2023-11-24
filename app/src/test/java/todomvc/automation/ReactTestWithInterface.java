@@ -1,20 +1,25 @@
 package todomvc.automation;
 
+import com.google.gson.Gson;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.html5.LocalStorage;
+import org.openqa.selenium.html5.WebStorage;
+import org.openqa.selenium.remote.Augmenter;
 
 import java.time.Duration;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ReactTestWithInterface {
     private static ChromeDriver driver;
     private static ReactPageWithInterface page;
+    private static WebStorage webStorage;
 
     @BeforeAll
     static void launchBrowser() {
@@ -22,6 +27,7 @@ public class ReactTestWithInterface {
         driver = new ChromeDriver();
         page = new ReactPageWithInterface(driver);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(1));
+        webStorage = (WebStorage) new Augmenter().augment(driver);
     }
 
     @BeforeEach
@@ -142,6 +148,42 @@ public class ReactTestWithInterface {
         }
         //Assert (status bar display)
         assertEquals(status, page.getNumberOfActiveItems());
+    }
+
+    @Test
+    void shouldCheckLocalStorageForKey() {
+        // Arrange - assert that new page does not have react-todos key and then add item
+        boolean doesNotHaveKey = page.doesLocalStorageContainKey("react-todos");
+        assertFalse(doesNotHaveKey);
+        page.addNewTodoItem("Make tests");
+        // Act
+        boolean hasKey = page.doesLocalStorageContainKey("react-todos");
+        // Assert
+        assertTrue(hasKey);
+    }
+
+    @Test
+    void ShouldCheckThatEachTodoHasARecordInLocaleStorage() {
+        for (int i = 1; i <= 5; i ++) {
+            page.addNewTodoItem("I am todo number " + i);
+        }
+        LocalStorage localStorage = webStorage.getLocalStorage();
+        System.out.println("This is local storage: " + localStorage);
+        localStorage.getItem("react-todos");
+        String reactTodosJson = localStorage.getItem("react-todos");
+        Gson gson = new Gson(); // You need the Gson library for this
+        List<Object> todos = gson.fromJson(reactTodosJson, List.class);
+        Object firstTodo = todos.get(0);
+        System.out.println("Todos: " + todos);
+        System.out.println(todos.size());
+
+    }
+    @Test
+    void ShouldCheckThatEachTodoHasARecordInLocaleStorage2() {
+        for (int i = 1; i <= 5; i ++) {
+            page.addNewTodoItem("I am todo number " + i);
+        }
+        assertEquals(5, page.checkNumberOfTodosInLocalStorage());
     }
 
     @AfterEach
